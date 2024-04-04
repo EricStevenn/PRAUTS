@@ -1,5 +1,7 @@
 const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
+const { User } = require('../../../models');
+
 
 /**
  * Handle get list of users request
@@ -46,15 +48,16 @@ async function getUser(request, response, next) {
  * @returns {object} Response object or pass an error to the next route
  */
 async function createUser(request, response, next) {
+  const name = request.body.name;
+  const email = request.body.email;
+  const password = request.body.password;
+  
   try {
-    const name = request.body.name;
-    const email = request.body.email;
-    const password = request.body.password;
+    const emailToCheck = await email;
 
-    const emailToCheck = email;
     if (usersService.checkUserEmail(emailToCheck)) {
       throw new Error('Email_Already_Taken');
-    } 
+    }
 
     const success = await usersService.createUser(name, email, password);
     if (!success) {

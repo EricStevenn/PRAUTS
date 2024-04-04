@@ -111,7 +111,8 @@ async function deleteUser(id) {
  * Check user's email
  * @param {string} email - email users
  * @returns {boolean}
- */function checkUserEmail(email) {
+ */
+function checkUserEmail(email) {
   if (usersRepository.isEmailUsed(email)) {
     return true; // Email sudah terdaftar
   } else {

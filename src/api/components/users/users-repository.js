@@ -64,14 +64,18 @@ async function deleteUser(id) {
 
 /** *
  * check email user
- * @param {string} id - User ID
  * @param {string} email
  * @returns {Promise}
  */
-  let users = [];
 
-async function isEmailUsed(email){
-  return users.some(User => User.email === email);
+async function isEmailUsed(email) {
+  try {
+      const user = await User.findOne({ email: email });
+      return !!user; // Mengembalikan true jika user ditemukan, false jika tidak
+  } catch (error) {
+      console.error('Error checking email:', error);
+      return false; // Mengembalikan false jika terjadi kesalahan
+  }
 }
 
 module.exports = {
