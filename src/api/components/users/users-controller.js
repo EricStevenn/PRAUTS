@@ -51,6 +51,11 @@ async function createUser(request, response, next) {
     const email = request.body.email;
     const password = request.body.password;
 
+    const emailToCheck = email;
+    if (usersService.checkUserEmail(emailToCheck)) {
+      throw new Error('Email_Already_Taken');
+    } 
+
     const success = await usersService.createUser(name, email, password);
     if (!success) {
       throw errorResponder(
@@ -58,12 +63,12 @@ async function createUser(request, response, next) {
         'Failed to create user'
       );
     }
-
     return response.status(200).json({ name, email });
-  } catch (error) {
+   } catch (error) {
     return next(error);
   }
 }
+
 
 /**
  * Handle update user request

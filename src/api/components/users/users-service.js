@@ -107,10 +107,24 @@ async function deleteUser(id) {
   return true;
 }
 
+/**
+ * Check user's email
+ * @param {string} email - email users
+ * @returns {boolean}
+ */function checkUserEmail(email) {
+  if (usersRepository.isEmailUsed(email)) {
+    return true; // Email sudah terdaftar
+  } else {
+      return false; // Email belum terdaftar
+    }
+  }
+
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  checkUserEmail,
 };

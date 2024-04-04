@@ -53,7 +53,7 @@ async function updateUser(id, name, email) {
   );
 }
 
-/**
+/** *
  * Delete a user
  * @param {string} id - User ID
  * @returns {Promise}
@@ -62,10 +62,23 @@ async function deleteUser(id) {
   return User.deleteOne({ _id: id });
 }
 
+/** *
+ * check email user
+ * @param {string} id - User ID
+ * @param {string} email
+ * @returns {Promise}
+ */
+  let users = [];
+
+async function isEmailUsed(email){
+  return users.some(User => User.email === email);
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  isEmailUsed,
 };
