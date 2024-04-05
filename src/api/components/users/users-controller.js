@@ -51,6 +51,7 @@ async function createUser(request, response, next) {
   const name = request.body.name;
   const email = request.body.email;
   const password = request.body.password;
+  const password_confirm = request.body.password_confirm;
   
   try {
     const emailAlreadyTaken = await usersService.checkUserEmail(email);
@@ -58,6 +59,15 @@ async function createUser(request, response, next) {
       throw errorResponder(
         errorTypes.EMAIL_ALREADY_TAKEN,
         'EMAIL_ALREADY_TAKEN'
+      )
+    }
+
+    const pass = await password;
+    const passconfirm = await password_confirm;
+    if(passconfirm != pass){
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'INVALID_PASSWORD'
       )
     }
 
