@@ -53,6 +53,19 @@ async function updateUser(id, name, email) {
   );
 }
 
+async function updatePassword(id, new_password){
+  return User.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $set: {
+        new_password,
+      },
+    }
+  );
+}
+
 /** *
  * Delete a user
  * @param {string} id - User ID
@@ -78,6 +91,17 @@ async function isEmailUsed(email) {
   }
 }
 
+//changePassword
+async function getUserByEmail(email) {
+  try {
+    const user = await User.findOne({ email });
+    return user;
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
@@ -85,4 +109,6 @@ module.exports = {
   updateUser,
   deleteUser,
   isEmailUsed,
+  getUserByEmail,
+  updatePassword,
 };

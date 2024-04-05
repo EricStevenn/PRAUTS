@@ -1,5 +1,6 @@
 const usersRepository = require('./users-repository');
 const { hashPassword } = require('../../../utils/password');
+const { passwordMatched } = require('../../../utils/password');
 
 /**
  * Get list of users
@@ -127,6 +128,44 @@ async function checkUserEmail(email) {
 }
 
 
+async function checkOldPassword(email, oldPassword) {
+  try {
+    const user = await usersRepository.getUserByEmail(email);
+
+    // Pastikan user ditemukan
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Bandingkan password lama dengan password yang tersimpan dalam database
+    const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
+
+    return isPasswordCorrect;
+  } catch (error) {
+    console.error('Error checking old password:', error);
+    throw error;
+  }
+}
+
+//update password
+async function updatePassword(id, new_password) {
+  const user = await usersRepository.getUser(id);
+
+  // User not found
+  if (!user) {
+    return null;
+  }
+
+  try {
+    await usersRepository.updatePassword(id, new_password);
+  } catch (err) {
+    return null;
+  }
+
+  return true;
+}
+
+
 module.exports = {
   getUsers,
   getUser,
@@ -134,4 +173,6 @@ module.exports = {
   updateUser,
   deleteUser,
   checkUserEmail,
+  checkOldPassword,
+  updatePassword,
 };

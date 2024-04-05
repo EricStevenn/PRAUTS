@@ -63,8 +63,8 @@ async function createUser(request, response, next) {
     }
 
     const pass = await password;
-    const passconfirm = await password_confirm;
-    if(passconfirm != pass){
+    const passConfirm = await password_confirm;
+    if(passConfirm != pass){
       throw errorResponder(
         errorTypes.INVALID_PASSWORD,
         'INVALID_PASSWORD'
@@ -145,10 +145,51 @@ async function deleteUser(request, response, next) {
   }
 }
 
+//change password
+async function changePassword(request, response, next) {
+  const id = request.params.id;
+  const old_password = request.body.old_password;
+  const new_password = request.body.new_password;
+  const password_confirm = request.body.password_confirm;
+  
+  try {
+    const correctOldPassword = await usersService.checkOldPassword(id, old_password);
+    if(!correctOldPassword){
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'INVALID_PASSWORD'
+      )
+    }
+
+    const newPass = await new_password;
+    const passConfirm = await password_confirm;
+    if(passConfirm != newPass){
+      throw errorResponder(
+        errorTypes.INVALID_PASSWORD,
+        'INVALID_PASSWORD'
+      )
+    }
+
+    const password = await new_password;
+    const success = await usersService.updatePassword(id, password);
+    if (!success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to create user'
+      );
+    }
+    return response.status(200).json({ id });
+   } catch (error) {
+    return next(error);
+  }
+}
+
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  changePassword,
 };

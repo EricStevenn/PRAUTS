@@ -17,5 +17,11 @@ module.exports = {
     },
   },
 
-
+  changePassword: {
+    body: {
+      old_password: joi.string().min(6).max(32).required().label('PwLama'),
+      new_password: joi.string().min(6).max(32).required().label('PwBaru'),
+      password_confirm : joi.string().min(6).max(32).required().label('Password_Confirm'),
+    },
+  },
 };
