@@ -112,13 +112,19 @@ async function deleteUser(id) {
  * @param {string} email - email users
  * @returns {boolean}
  */
-function checkUserEmail(email) {
-  if (usersRepository.isEmailUsed(email)) {
-    return true; // Email sudah terdaftar
-  } else {
+async function checkUserEmail(email) {
+  try {
+    const checkEmail = await usersRepository.isEmailUsed(email);
+    if (!checkEmail) {
       return false; // Email belum terdaftar
+    } else {
+      return true; // Email sudah terdaftar
     }
+  } catch (error) {
+    console.error('Error checking email:', error);
+    return false; // Mengembalikan false jika terjadi kesalahan
   }
+}
 
 
 module.exports = {

@@ -53,9 +53,8 @@ async function createUser(request, response, next) {
   const password = request.body.password;
   
   try {
-    const emailToCheck = await email;
-
-    if (usersService.checkUserEmail(emailToCheck)) {
+    const emailAlreadyTaken = await usersService.checkUserEmail(email);
+    if (emailAlreadyTaken) {
       throw new Error('Email_Already_Taken');
     }
 

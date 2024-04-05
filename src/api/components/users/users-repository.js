@@ -70,11 +70,11 @@ async function deleteUser(id) {
 
 async function isEmailUsed(email) {
   try {
-      const user = await User.findOne({ email: email });
-      return !!user; // Mengembalikan true jika user ditemukan, false jika tidak
+    const user = await User.findOne({ email: email });
+    return !!user; // Mengembalikan true jika user ditemukan, false jika tidak
   } catch (error) {
-      console.error('Error checking email:', error);
-      return false; // Mengembalikan false jika terjadi kesalahan
+    console.error('Error checking email:', error);
+    return false; // Mengembalikan false jika terjadi kesalahan
   }
 }
 
