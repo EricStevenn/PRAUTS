@@ -55,7 +55,10 @@ async function createUser(request, response, next) {
   try {
     const emailAlreadyTaken = await usersService.checkUserEmail(email);
     if (emailAlreadyTaken) {
-      throw new Error('Email_Already_Taken');
+      throw errorResponder(
+        errorTypes.EMAIL_ALREADY_TAKEN,
+        'EMAIL_ALREADY_TAKEN'
+      )
     }
 
     const success = await usersService.createUser(name, email, password);
@@ -80,16 +83,24 @@ async function createUser(request, response, next) {
  * @returns {object} Response object or pass an error to the next route
  */
 async function updateUser(request, response, next) {
+  const id = request.params.id;
+  const name = request.body.name;
+  const email = request.body.email;
+  
   try {
-    const id = request.params.id;
-    const name = request.body.name;
-    const email = request.body.email;
+    const emailAlreadyTaken = await usersService.checkUserEmail(email);
+    if (emailAlreadyTaken) {
+      throw errorResponder(
+        errorTypes.EMAIL_ALREADY_TAKEN,
+        'EMAIL_ALREADY_TAKEN'
+      )
+    }
 
     const success = await usersService.updateUser(id, name, email);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
-        'Failed to update user'
+        response.status(409)
       );
     }
 
