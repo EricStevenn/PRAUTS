@@ -157,7 +157,7 @@ async function changePassword(request, response, next) {
     if(!correctOldPassword){
       throw errorResponder(
         errorTypes.INVALID_PASSWORD,
-        'INVALID_PASSWORD'
+        'INVALID_OLD_PASSWORD'
       )
     }
 
@@ -166,7 +166,7 @@ async function changePassword(request, response, next) {
     if(passConfirm != newPass){
       throw errorResponder(
         errorTypes.INVALID_PASSWORD,
-        'INVALID_PASSWORD'
+        'INVALID_CONFIRM_PASSWORD'
       )
     }
 

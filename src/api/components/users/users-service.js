@@ -128,27 +128,20 @@ async function checkUserEmail(email) {
 }
 
 
-async function checkOldPassword(email, oldPassword) {
-  try {
-    const user = await usersRepository.getUserByEmail(email);
+async function checkOldPassword(id, oldPassword) {
+  const user = await usersRepository.getUser(id);
 
-    // Pastikan user ditemukan
-    if (!user) {
-      throw new Error('User not found');
-    }
+  const userPassword = user ? user.password : '<RANDOM_PASSWORD_FILLER>';
+  const passwordChecked = await passwordMatched(oldPassword, userPassword);
 
-    // Bandingkan password lama dengan password yang tersimpan dalam database
-    const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
-
-    return isPasswordCorrect;
-  } catch (error) {
-    console.error('Error checking old password:', error);
-    throw error;
+  if (user && passwordChecked) {
+    return true;
   }
 }
 
 //update password
-async function updatePassword(id, new_password) {
+async function updatePassword(id, password) {
+  const hashedPassword = await hashPassword(password);
   const user = await usersRepository.getUser(id);
 
   // User not found
@@ -157,7 +150,7 @@ async function updatePassword(id, new_password) {
   }
 
   try {
-    await usersRepository.updatePassword(id, new_password);
+    await usersRepository.updatePassword(id, hashedPassword);
   } catch (err) {
     return null;
   }
